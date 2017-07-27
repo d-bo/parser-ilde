@@ -1,0 +1,10 @@
+## Dependencies
+
+https://nodejs.org/en/
+
+## Install
+
+$ npm install
+$ virtualenv ilde
+$ source ilde/bin/activate
+$ pip install -r requirements.txt

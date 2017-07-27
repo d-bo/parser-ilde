@@ -1,0 +1,11 @@
+csv/
+*.pyc
+.vscode
+node_modules
+letoile
+!img/README.txt
+img/
+brands.json
+logs/*.log
+venv
+ilde/
