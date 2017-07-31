@@ -1,9 +1,10 @@
 #!/bin/bash
 
+cd $1
 # mongodb prefix
 # python step2-3 will catch this
 export ILDE_MONGO_DB="parser"
-
+source /ilde/bin/activate
 echo -e "\e[44mSTART ILDE\e[0m"
 start=`date +%s`
 node step1.js
@@ -15,3 +16,4 @@ end=`date +%s`
 runtime=$((end-start))
 echo -e "\e[42mILDE FINISHED\e[0m"
 echo "Script exec time: $runtime"
+deactivate
