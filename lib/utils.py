@@ -101,27 +101,46 @@ class Utils:
 
 
     @staticmethod
-    def insertProductItems(basket, collection, preview_img_link = None):
+    def insertProductItems(basket, collection, collection_final, preview_img_link = None):
 
         """ mongodb insert """
 
         for item in basket['basket']:
-            # is allready in collection ?
-            double = collection.find_one({"articul": item['articul']})
+            # is allready in final collection ?
+            double = collection_final.find_one({"articul": item['articul']})
+            # document into price collection
+            price_doc = {
+                'articul': item['articul'],
+                'p_price': item['p_price'],
+                'p_original_price': item['p_original_price'],
+                'brand': item['brand'],
+                'product_id': item['product_id']
+            }
             if double is None:
                 # insert img link to document
                 if preview_img_link is not None:
                     item['image'] = preview_img_link['href']
                 print("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n")
-                _id = collection.insert_one(item).inserted_id
+
+                # insert price
+                price_id = collection.insert_one(price_doc).inserted_id
+
+                # final collection
+                del item['p_price']
+                del item['p_original_price']
+                _id = collection_final.insert_one(item).inserted_id
             else:
+                price_id = collection.insert_one(price_doc).inserted_id
                 print "Double: articul "+item['articul']
 
 
 
     @staticmethod
     def getDbprefix():
-        return datetime.strftime(datetime.now(),"%d-%m-%Y")
+        return {
+            'monthly': datetime.strftime(datetime.now(),"%m-%Y"),
+            'daily': datetime.strftime(datetime.now(),"%d-%m-%Y")
+        }
 
 
 
@@ -146,6 +165,7 @@ class Utils:
                 'collection_sheets_rules': MC[db][config['coll']['sheets_rules']],
                 'collection_history': MC[db][config['coll']['history']],
                 'collection_ilde': MC[db][config['coll']['ilde']],
+                'collection_ilde_final': MC[db][config['coll']['ilde_final']],
                 'collection_letu': MC[db][config['coll']['letu']],
                 'collection_global_links': MC[db][config['coll']['global_links']],
                 'collection_failed_links': MC[db][config['coll']['failed_links']],
@@ -153,15 +173,16 @@ class Utils:
             }
         else:
             return {
-                'collection_gestori': MC[db][dbprefix+"_"+config['coll']['gestori']],
-                'collection_sheets': MC[db][dbprefix+"_"+config['coll']['sheets']],
-                'collection_supplier': MC[db][dbprefix+"_"+config['coll']['supplier']],
-                'collection_supplier_info': MC[db][dbprefix+"_"+config['coll']['supplier_info']],
-                'collection_sheets_rules': MC[db][dbprefix+"_"+config['coll']['sheets_rules']],
-                'collection_history': MC[db][dbprefix+"_"+config['coll']['history']],
-                'collection_ilde': MC[db][dbprefix+"_"+config['coll']['ilde']],
-                'collection_letu': MC[db][dbprefix+"_"+config['coll']['letu']],
-                'collection_global_links': MC[db][dbprefix+"_"+config['coll']['global_links']],
-                'collection_failed_links': MC[db][dbprefix+"_"+config['coll']['failed_links']],
-                'collection_pagination': MC[db][dbprefix+"_"+config['coll']['pagination']]
+                'collection_gestori': MC[db][config['coll']['gestori']],
+                'collection_sheets': MC[db][dbprefix['daily']+"_"+config['coll']['sheets']],
+                'collection_supplier': MC[db][dbprefix['daily']+"_"+config['coll']['supplier']],
+                'collection_supplier_info': MC[db][dbprefix['daily']+"_"+config['coll']['supplier_info']],
+                'collection_sheets_rules': MC[db][dbprefix['daily']+"_"+config['coll']['sheets_rules']],
+                'collection_history': MC[db][dbprefix['daily']+"_"+config['coll']['history']],
+                'collection_ilde': MC[db][dbprefix['monthly']+"_"+config['coll']['ilde']],
+                'collection_ilde_final': MC[db][config['coll']['ilde_final']],
+                'collection_letu': MC[db][dbprefix['monthly']+"_"+config['coll']['letu']],
+                'collection_global_links': MC[db][dbprefix['daily']+"_"+config['coll']['global_links']],
+                'collection_failed_links': MC[db][dbprefix['daily']+"_"+config['coll']['failed_links']],
+                'collection_pagination': MC[db][dbprefix['daily']+"_"+config['coll']['pagination']]
             }

@@ -32,6 +32,7 @@ urls = []
 
 
 collection = cpool['collection_ilde']
+collection_final = cpool['collection_ilde_final']
 pagination = cpool['collection_pagination']
 global_links = cpool['collection_global_links']
 
@@ -93,7 +94,7 @@ for item in cursor:
                 except:
                     print('whooops! no json')
 
-                Utils.insertProductItems(_json, collection)
+                Utils.insertProductItems(_json, collection, collection_final)
 
                 # extract image & save to folder
                 img_dir = script_dir+"/img/"

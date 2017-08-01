@@ -26,6 +26,7 @@ dbprefix = Utils.getDbprefix()
 cpool = Utils.getCollectionPool(config, dbprefix)
 
 collection = cpool['collection_ilde']
+collection_final = cpool['collection_ilde_final']
 global_links = cpool['collection_global_links']
 failed_links = cpool['collection_failed_links']
 
@@ -68,7 +69,7 @@ for u in cursor:
 
             print(url)
 
-            Utils.insertProductItems(_json, collection, preview_img_link)
+            Utils.insertProductItems(_json, collection, collection_final, preview_img_link)
             global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
     i = i + 1
