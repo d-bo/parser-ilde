@@ -21,5 +21,5 @@ crontab -e
 # everyday at 11:00
 # 00 11 * * 1 source <PROJECT_PATH>/start-ilde.sh <PROJECT_PATH>
 
-00 11 * * 1 source /home/administrator/parser_ilde/start-ilde.sh /home/administrator/parser_ilde
+00 11 * * * /bin/bash /home/administrator/parser_ilde/start-ilde.sh /home/administrator/parser_ilde
 ```

@@ -4,7 +4,7 @@ cd $1
 # mongodb prefix
 # python step2-3 will catch this
 export ILDE_MONGO_DB="parser"
-source /ilde/bin/activate
+source ilde/bin/activate
 echo -e "\e[44mSTART ILDE\e[0m"
 start=`date +%s`
 node step1.js
