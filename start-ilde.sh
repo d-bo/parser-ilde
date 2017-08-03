@@ -7,7 +7,7 @@ export ILDE_MONGO_DB="parser"
 source ilde/bin/activate
 echo -e "\e[44mSTART ILDE\e[0m"
 start=`date +%s`
-node step1.js
+python step1.py
 python step2.py
 python step25.py
 python step3.py

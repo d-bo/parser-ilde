@@ -5,7 +5,6 @@ https://nodejs.org/en/
 ## Install
 
 ```bash
-npm install
 virtualenv ilde
 source ilde/bin/activate
 pip install -r requirements.txt

@@ -1,3 +1,8 @@
+## [0.0.4] - 03-08-2017
+### Changed
+- step1.js rewritten to python (step1.py)
+- removed package.json (no need to `npm install`)
+
 ## [0.0.3] - 01-08-2017
 ### Added
 - mongo collection: monthly price (ex. 08-2017_ILDE), single product (ILDE_final)
