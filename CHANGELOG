@@ -1,7 +1,11 @@
+## [0.0.3] - 01-08-2017
+### Added
+- mongo collection: monthly price (ex. 08-2017_ILDE), single product (ILDE_final)
+
 ## [0.0.2] - 31-07-2017
 ### Fixed
 - Cron bash script fixed
 
 ## [0.0.1] - 27-07-2017 
 ### Added
-- Migrated from alpha_db 
+- Migrated from alpha_db

@@ -30,17 +30,17 @@ urls = []
 
 
 
-# brands are in a file
-f = open('brands.json', 'r')
-a = f.read()
-brands = json.loads(a)
+# get brands
+coll = cpool['collection_ilde_brands']
+brands = coll.find()
+brands = list(brands)
 
 collection = cpool['collection_pagination']
-print(collection)
+
 # iterate brands
 for a in brands:
     for i in range(1,10):
-        url = 'http://iledebeaute.ru/brands/' + a + '/catalog/page' + str(i) + '/?perpage=72'
+        url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
         try:
             response = urllib2.urlopen(url, timeout=10)
         except urllib2.HTTPError as err:
