@@ -101,9 +101,11 @@ class Utils:
 
 
     @staticmethod
-    def insertProductItems(basket, collection, collection_final, preview_img_link = None):
+    def insertProductItems(basket, cpool, preview_img_link = None):
 
         """ mongodb insert """
+        collection = cpool['collection_ilde']
+        collection_final = cpool['collection_ilde_final']
 
         for item in basket['basket']:
             # is allready in final collection ?
@@ -116,7 +118,18 @@ class Utils:
                 'brand': item['brand'],
                 'product_id': item['product_id']
             }
+            # gestori match by articul check
+            gestori = cpool['collection_gestori']
+            match_articul = gestori.find_one({'Artic': item['articul']})
+
+            if match_articul is not None:
+                print("Match articul: ", item['articul'])
+                cod_good = match_articul['Cod_good']
+                #print("Match articul: ", item['articul'], list(match_articul))
+
             if double is None:
+                if 'cod_good' in locals():
+                    item['gestori'] = cod_good
                 # insert img link to document
                 if preview_img_link is not None:
                     item['image'] = preview_img_link['href']
@@ -130,6 +143,9 @@ class Utils:
                 del item['p_original_price']
                 _id = collection_final.insert_one(item).inserted_id
             else:
+                # update final
+                if 'cod_good' in locals():
+                    collection_final.find_one_and_update({'articul': item['articul']}, {'$set': {'gestori': cod_good}})
                 price_id = collection.insert_one(price_doc).inserted_id
                 print "Double: articul "+item['articul']
 

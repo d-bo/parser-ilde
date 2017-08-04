@@ -94,7 +94,7 @@ for item in cursor:
                 except:
                     print('whooops! no json')
 
-                Utils.insertProductItems(_json, collection, collection_final)
+                Utils.insertProductItems(_json, cpool)
 
                 # extract image & save to folder
                 img_dir = script_dir+"/img/"

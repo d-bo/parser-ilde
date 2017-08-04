@@ -69,7 +69,7 @@ for u in cursor:
 
             print(url)
 
-            Utils.insertProductItems(_json, collection, collection_final, preview_img_link)
+            Utils.insertProductItems(_json, cpool, preview_img_link)
             global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
     i = i + 1
