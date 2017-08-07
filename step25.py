@@ -97,7 +97,11 @@ for item in cursor:
                 Utils.insertProductItems(_json, cpool)
 
                 # extract image & save to folder
-                img_dir = script_dir+"/img/"
+                if os.getenv('ILDE_IMG_DIR') is None:
+                    img_dir = script_dir+"/img/"
+                else:
+                    img_dir = os.getenv('ILDE_IMG_DIR')
+                
                 Utils.extractImg(_json['basket'], img_dir)
 
         # continue

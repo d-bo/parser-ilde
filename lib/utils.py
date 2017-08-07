@@ -84,8 +84,7 @@ class Utils:
                     continue
 
                 img = Image.open(file)
-                #new_dir = img_dir+str(item['brand'])+"/"
-                new_dir = img_dir + "all" + "/"
+                new_dir = img_dir + "/"
                 if not os.path.exists(new_dir):
                     os.makedirs(new_dir)
                 new_file = new_dir+str(item['articul'])+".jpg"

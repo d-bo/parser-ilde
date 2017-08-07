@@ -1,3 +1,7 @@
+## [0.0.5] - 07-08-2017
+### Changed
+- set image collect dir from environment (jenkins)
+
 ## [0.0.4] - 03-08-2017
 ### Changed
 - step1.js rewritten to python (step1.py)
