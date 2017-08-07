@@ -23,12 +23,9 @@ crontab -e
 00 11 * * * /bin/bash /home/administrator/parser_ilde/start-ilde.sh /home/administrator/parser_ilde
 ```
 
-## Images
+## Jenkins
 
 ```bash
-# img collector dir (CDN ?)
-# jenkins
-# ! no end slash
-# default to <PROJECT_DIR>/img/all
-export ILDE_IMG_DIR=/home/administrator/img
+# pass img path as a file to WORKSPACE dir
+echo '/home/administrator/static/img' > ILDE_IMG_PATH
 ```

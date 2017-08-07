@@ -4,6 +4,13 @@ cd $1
 # mongodb prefix
 # python step2-3 will catch this
 export ILDE_MONGO_DB="parser"
+
+# jenkins created ILDE_IMG_PATH file
+# contains path to img dir
+export ILDE_IMG_PATH=`cat ILDE_IMG_PATH`
+echo "Image path: "$ILDE_IMG_PATH
+
+# init virtualenv
 source ilde/bin/activate
 echo -e "\e[44mSTART ILDE\e[0m"
 start=`date +%s`
