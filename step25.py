@@ -125,4 +125,7 @@ for item in cursor:
 # must be completed
 pagination.replace_one({'last': { '$exists': True }}, {'last': ''})
 
+Utils._logfile(str(Utils.getDbprefix()['daily'])+' step25 , new: '+str(Utils.count_new)+", double: "+str(Utils.count_double)+"\n\r")
+Utils._logfile(str(Utils.getDbprefix()['daily'])+' step25 , img_new: '+str(Utils.count_new)+", img_double: "+str(Utils.count_double)+"\n\r")
+
 print("Script exec time: " + str(datetime.now() - startTime))

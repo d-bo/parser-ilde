@@ -74,4 +74,7 @@ for u in cursor:
 
     i = i + 1
 
+Utils._logfile(str(Utils.getDbprefix()['daily'])+' step3 , new: '+str(Utils.count_new)+", double: "+str(Utils.count_double)+"\n\r")
+Utils._logfile(str(Utils.getDbprefix()['daily'])+' step3 , img_new: '+str(Utils.count_new)+", img_double: "+str(Utils.count_double)+"\n\r")
+
 print("Script exec time: " + str(datetime.now() - startTime))

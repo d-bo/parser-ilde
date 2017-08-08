@@ -1,7 +1,3 @@
-## Dependencies
-
-https://nodejs.org/en/
-
 ## Install
 
 ```bash
@@ -24,8 +20,15 @@ crontab -e
 ```
 
 ## Jenkins
+### General > Build > Execute shell
 
 ```bash
-# pass img path as a file to WORKSPACE dir
+#!/bin/bash
+
+virtualenv ilde
+source $WORKSPACE/ilde/bin/activate
+pip install -r requirements.txt
+# img static collect dir
 echo '/home/administrator/static/img' > ILDE_IMG_PATH
+deactivate
 ```

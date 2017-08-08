@@ -13,6 +13,14 @@ class Utils:
 
     """ Class Utils """
 
+    # products count
+    count_new = 0
+    count_double = 0
+
+    # product images count
+    img_new = 0
+    img_double = 0
+
 
 
     @staticmethod
@@ -65,6 +73,18 @@ class Utils:
 
 
     @staticmethod
+    def _logfile(msg):
+
+        """ log to msg dir """
+
+        fname = Utils.getDbprefix()['daily']
+        f = open("./log/"+fname+"_Log", "a+")
+        f.write(msg)
+        f.close()
+
+
+
+    @staticmethod
     def extractImg(doc, img_dir):
 
         """ json extract image -> save in img_dir """
@@ -91,8 +111,10 @@ class Utils:
                 if os.path.isfile(new_file) is not True:
                     print("Image saved url: "+url)
                     img.save(new_file)
+                    Utils.img_new = Utils.img_new + 1
                 else:
                     print("Image allready exists: "+new_file)
+                    Utils.img_double = Utils.img_double + 1
 
             else:
                 print("\nNO IMAGE IN BASKET")
@@ -141,12 +163,14 @@ class Utils:
                 del item['p_price']
                 del item['p_original_price']
                 _id = collection_final.insert_one(item).inserted_id
+                Utils.count_new = Utils.count_new + 1
             else:
                 # update final
                 if 'cod_good' in locals():
                     collection_final.find_one_and_update({'articul': item['articul']}, {'$set': {'gestori': cod_good}})
                 price_id = collection.insert_one(price_doc).inserted_id
                 print "Double: articul "+item['articul']
+                Utils.count_double = Utils.count_double + 1
 
 
 
