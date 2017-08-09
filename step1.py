@@ -33,6 +33,7 @@ urls = []
 
 coll = cpool['collection_ilde_brands']
 print(coll)
+Utils._logfile('step1: '+str(coll))
 
 url = 'https://iledebeaute.ru/brands/'
 
@@ -40,8 +41,10 @@ try:
     page = urllib2.urlopen(url, timeout=100).read()
 except urllib2.HTTPError as err:
     print(err)
+    Utils._logfile('step1: '+str(err))
 except socket.timeout as err:
     print 'X SOCKET TIMEOUT ' + str(err)
+    Utils._logfile('step1: '+'X SOCKET TIMEOUT ' + str(err))
 
 soup = BeautifulSoup(page, 'html.parser')
 
@@ -54,5 +57,7 @@ for o in select.find_all('option'):
     if val is not "":
         coll.insert_one({'name': str(val)})
     print(val)
+    Utils._logfile('step1: '+str(val))
 
 print("Script exec time: " + str(datetime.now() - startTime))
+Utils._logfile('step1: '+"Script exec time: " + str(datetime.now() - startTime))

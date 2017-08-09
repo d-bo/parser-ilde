@@ -44,8 +44,10 @@ for u in cursor:
     except urllib2.HTTPError as err:
         failed_id = failed_links.insert_one({"val": url}).inserted_id
         print(err)
+        Utils._logfile('step3: '+str(err))
     except socket.timeout as err:
         print 'X SOCKET TIMEOUT ' + str(err)
+        Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))
 
     soup = BeautifulSoup(page, 'html.parser')
 
@@ -66,15 +68,15 @@ for u in cursor:
                 _json_str = json.dumps(_json['basket'])
             except:
                 print('whooops! no json')
+                Utils._logfile('step3: '+'whooops! no json')
 
             print(url)
+            Utils._logfile('step3: '+url)
 
             Utils.insertProductItems(_json, cpool, preview_img_link)
             global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
     i = i + 1
 
-Utils._logfile(str(Utils.getDbprefix()['daily'])+' step3 , new: '+str(Utils.count_new)+", double: "+str(Utils.count_double)+"\n\r")
-Utils._logfile(str(Utils.getDbprefix()['daily'])+' step3 , img_new: '+str(Utils.count_new)+", img_double: "+str(Utils.count_double)+"\n\r")
-
 print("Script exec time: " + str(datetime.now() - startTime))
+Utils._logfile('step3: '+"Script exec time: " + str(datetime.now() - startTime))

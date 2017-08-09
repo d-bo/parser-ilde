@@ -21,7 +21,11 @@ class Utils:
     img_new = 0
     img_double = 0
 
+    # price
+    price_double = 0      # daily double price
 
+    # collection pool
+    cpool = None
 
     @staticmethod
     def parseSheetsCSV(csv_path):
@@ -78,9 +82,29 @@ class Utils:
         """ log to msg dir """
 
         fname = Utils.getDbprefix()['daily']
-        f = open("./log/"+fname+"_Log", "a+")
-        f.write(msg)
+        path = "./log/"+fname+"_Log"
+        try:
+            os.mkdir("./log")
+        except OSError as err:
+            pass
+
+        f = open(path, "a+")
+        f.write(str(msg)+"\n")
         f.close()
+
+
+
+    @staticmethod
+    def Log(cpool, subj, act, val):
+
+        """ Mongo log event """
+
+        cpool['collection_log'].insert_one({
+            'subject': subj,
+            'action': act,
+            'val': val,
+            'date': Utils.getDbprefix()['daily']
+        })
 
 
 
@@ -137,7 +161,8 @@ class Utils:
                 'p_price': item['p_price'],
                 'p_original_price': item['p_original_price'],
                 'brand': item['brand'],
-                'product_id': item['product_id']
+                'product_id': item['product_id'],
+                'date': Utils.getDbprefix()['daily']
             }
             # gestori match by articul check
             gestori = cpool['collection_gestori']
@@ -157,28 +182,54 @@ class Utils:
                 print("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n")
 
                 # insert price
-                price_id = collection.insert_one(price_doc).inserted_id
+                Utils.insertPrice(cpool, price_doc)
 
                 # final collection
                 del item['p_price']
                 del item['p_original_price']
                 _id = collection_final.insert_one(item).inserted_id
                 Utils.count_new = Utils.count_new + 1
+                Utils.Log(cpool, 'ilde', 'new_articul', item['articul'])
             else:
                 # update final
                 if 'cod_good' in locals():
                     collection_final.find_one_and_update({'articul': item['articul']}, {'$set': {'gestori': cod_good}})
-                price_id = collection.insert_one(price_doc).inserted_id
+
+                # insert price
+                Utils.insertPrice(cpool, price_doc)
+
                 print "Double: articul "+item['articul']
                 Utils.count_double = Utils.count_double + 1
 
 
 
     @staticmethod
+    def insertPrice(cpool, price_doc):
+
+        """
+        insert price | check for daily double
+        TODO: upsert, create index on `articul`, `date`
+        """
+
+        collection = cpool['collection_ilde']
+
+        double = collection.find_one({
+            "articul": price_doc['articul'],
+            "date": Utils.getDbprefix()['daily']
+        })
+        if double is None:
+            return collection.insert_one(price_doc).inserted_id
+        else:
+            print('DOUBLE PRICE')
+            return False
+
+
+
+    @staticmethod
     def getDbprefix():
         return {
-            'monthly': datetime.strftime(datetime.now(),"%m-%Y"),
-            'daily': datetime.strftime(datetime.now(),"%d-%m-%Y")
+            'monthly': datetime.strftime(datetime.now(), "%m-%Y"),
+            'daily': datetime.strftime(datetime.now(), "%d-%m-%Y")
         }
 
 
@@ -209,7 +260,8 @@ class Utils:
                 'collection_global_links': MC[db][config['coll']['global_links']],
                 'collection_failed_links': MC[db][config['coll']['failed_links']],
                 'collection_pagination': MC[db][config['coll']['pagination']],
-                'collection_ilde_brands': MC[db][config['coll']['ilde_brands']]
+                'collection_ilde_brands': MC[db][config['coll']['ilde_brands']],
+                'collection_log': MC[db][config['coll']['log']]
             }
         else:
             return {
@@ -225,5 +277,6 @@ class Utils:
                 'collection_global_links': MC[db][dbprefix['daily']+"_"+config['coll']['global_links']],
                 'collection_failed_links': MC[db][dbprefix['daily']+"_"+config['coll']['failed_links']],
                 'collection_pagination': MC[db][dbprefix['daily']+"_"+config['coll']['pagination']],
-                'collection_ilde_brands': MC[db][dbprefix['daily']+"_"+config['coll']['ilde_brands']]
+                'collection_ilde_brands': MC[db][dbprefix['daily']+"_"+config['coll']['ilde_brands']],
+                'collection_log': MC[db][dbprefix['daily']+"_"+config['coll']['log']]
             }

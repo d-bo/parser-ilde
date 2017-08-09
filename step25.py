@@ -74,8 +74,10 @@ for item in cursor:
         pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
     except urllib2.HTTPError as err:
         print 'X ['+item+']' + err
+        Utils._logfile('step25: '+'X ['+item+']' + str(err))
     except socket.timeout as err:
         print 'X SOCKET TIMEOUT ' + str(err)
+        Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))
     else:
         soup = BeautifulSoup(response, 'html.parser')
         script = soup.find_all('script')
@@ -93,6 +95,7 @@ for item in cursor:
                     _json_str = json.dumps(_json['basket'])
                 except:
                     print('whooops! no json')
+                    Utils._logfile('step25: '+'whooops! no json')
 
                 Utils.insertProductItems(_json, cpool)
 
@@ -113,11 +116,12 @@ for item in cursor:
         for h in hrefs:
             if h['href'] != '':
                 url = 'http://iledebeaute.ru' + str(h['href'])
-                value = {'val': url}
+                value = {'val': url, 'brand': item['brand']}
                 double = global_links.find_one(value)
                 if double is None:
                     _id = global_links.insert_one(value).inserted_id
                     print "Page link inserted: " + str(_id)
+                    Utils._logfile('step25: '+"Page link inserted: " + str(_id))
                 #global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
 
@@ -125,7 +129,5 @@ for item in cursor:
 # must be completed
 pagination.replace_one({'last': { '$exists': True }}, {'last': ''})
 
-Utils._logfile(str(Utils.getDbprefix()['daily'])+' step25 , new: '+str(Utils.count_new)+", double: "+str(Utils.count_double)+"\n\r")
-Utils._logfile(str(Utils.getDbprefix()['daily'])+' step25 , img_new: '+str(Utils.count_new)+", img_double: "+str(Utils.count_double)+"\n\r")
-
 print("Script exec time: " + str(datetime.now() - startTime))
+Utils._logfile('step25: '+"Script exec time: " + str(datetime.now() - startTime))

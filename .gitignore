@@ -6,6 +6,6 @@ letoile
 !img/README.txt
 img/
 brands.json
-logs/*.log
+log/
 venv
 ilde/

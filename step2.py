@@ -45,14 +45,19 @@ for a in brands:
             response = urllib2.urlopen(url, timeout=10)
         except urllib2.HTTPError as err:
             print 'X ['+url+']'
+            Utils._logfile('step2: '+'X ['+url+']')
         except socket.timeout as err:
             print 'X SOCKET TIMEOUT ' + str(err)
+            Utils._logfile('step2: '+'X SOCKET TIMEOUT ' + str(err))
         else:
-            value = {'val': url}
+            value = {'val': url, 'brand': a['name']}
             double = collection.find_one(value)
             if double is None:
                 _id = collection.insert_one(value).inserted_id
                 print "Inserted: " + str(_id)
+                Utils._logfile('step2: '+"Inserted: " + str(_id))
             print '+ ['+url+']'
+            Utils._logfile('step2: '+'+ ['+url+']')
 
 print("Script exec time: " + str(datetime.now() - startTime))
+Utils._logfile('step2: '+"Script exec time: " + str(datetime.now() - startTime))
