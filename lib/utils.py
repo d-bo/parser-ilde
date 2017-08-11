@@ -278,5 +278,5 @@ class Utils:
                 'collection_failed_links': MC[db][dbprefix['daily']+"_"+config['coll']['failed_links']],
                 'collection_pagination': MC[db][dbprefix['daily']+"_"+config['coll']['pagination']],
                 'collection_ilde_brands': MC[db][dbprefix['daily']+"_"+config['coll']['ilde_brands']],
-                'collection_log': MC[db][dbprefix['daily']+"_"+config['coll']['log']]
+                'collection_log': MC[db][config['coll']['log']]
             }

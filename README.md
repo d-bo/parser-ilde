@@ -1,9 +1,11 @@
 ## Install
 
 ```bash
+cd parser_ilde
 virtualenv ilde
 source ilde/bin/activate
 pip install -r requirements.txt
+python tcp-server.py
 ```
 
 ## Cron
@@ -14,9 +16,8 @@ crontab -e
 
 ```bash
 # everyday at 11:00
-# 00 11 * * * source <PROJECT_PATH>/start-ilde.sh <PROJECT_PATH>
 
-00 11 * * * /bin/bash /home/administrator/parser_ilde/start-ilde.sh /home/administrator/parser_ilde
+00 11 * * * echo -n "start"|netcat 127.0.0.1 8801
 ```
 
 ## Jenkins
