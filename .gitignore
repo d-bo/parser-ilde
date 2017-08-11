@@ -3,8 +3,8 @@ csv/
 .vscode
 node_modules
 letoile
+img/*
 !img/README.txt
-img/
 brands.json
 log/
 venv

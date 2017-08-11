@@ -1,0 +1,72 @@
+# -*- coding: utf-8 -*-
+
+import os
+import json
+import socket
+import execjs
+import urllib2
+from bs4 import BeautifulSoup
+from datetime import datetime
+
+from lib.utils import Utils
+
+
+
+class Step3:
+
+    """ ergerg """
+
+    def __init__(self, cpool, config = None):
+
+        collection = cpool['collection_ilde']
+        collection_final = cpool['collection_ilde_final']
+        global_links = cpool['collection_global_links']
+        failed_links = cpool['collection_failed_links']
+
+        cursor = global_links.find({'val': { '$exists': True }})
+
+        i = 0
+        total = 0
+
+        for u in cursor:
+
+            url = u['val']
+
+            try:
+                page = urllib2.urlopen(url, timeout=10).read()
+            except urllib2.HTTPError as err:
+                failed_id = failed_links.insert_one({"val": url}).inserted_id
+                print(err)
+                Utils._logfile('step3: '+str(err))
+            except socket.timeout as err:
+                print 'X SOCKET TIMEOUT ' + str(err)
+                Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))
+
+            soup = BeautifulSoup(page, 'html.parser')
+
+            # find img preview link
+            preview_img_link = soup.find('a', {'class': 'preview'})
+            script = soup.find_all('script')
+            for t in script:
+                _str = unicode(t.string)
+                # looking for TMPCounter var in <script>
+                if _str.find("var TMPCounter") != -1:
+                    _str = _str.replace('var TMPCounter = ', '')
+                    _str = _str.replace('//<!--', '')
+                    _str = _str.replace('//-->', '')
+                    _str = _str.replace('|| {};', '')
+
+                    try:
+                        _json = json.loads(_str)
+                        _json_str = json.dumps(_json['basket'])
+                    except:
+                        print('whooops! no json')
+                        Utils._logfile('step3: '+'whooops! no json')
+
+                    print(url)
+                    Utils._logfile('step3: '+url)
+
+                    Utils.insertProductItems(_json, cpool, preview_img_link)
+                    global_links.replace_one({'last': { '$exists': True }}, {'last': url})
+
+            i = i + 1
