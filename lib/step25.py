@@ -67,6 +67,8 @@ class Step25:
             except socket.timeout as err:
                 print 'X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))
+            except ssl.SSLError as err:
+                print 'SSLError: ' + str(err)
             else:
                 soup = BeautifulSoup(response, 'html.parser')
                 script = soup.find_all('script')

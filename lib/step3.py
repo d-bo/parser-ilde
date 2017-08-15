@@ -41,6 +41,8 @@ class Step3:
             except socket.timeout as err:
                 print 'X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))
+            except ssl.SSLError as err:
+                print 'SSLError: ' + str(err)
 
             soup = BeautifulSoup(page, 'html.parser')
 

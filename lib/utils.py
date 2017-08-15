@@ -126,6 +126,8 @@ class Utils:
                 except socket.timeout as err:
                     print 'X SOCKET TIMEOUT ' + str(err)
                     continue
+                except ssl.SSLError as err:
+                    print 'SSLError: ' + str(err)
 
                 img = Image.open(file)
                 new_dir = img_dir + "/"
