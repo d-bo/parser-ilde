@@ -24,8 +24,6 @@ config.read(script_dir+'/config.ini')
 dbprefix = Utils.getDbprefix()
 cpool = Utils.getCollectionPool(config, dbprefix)
 
-
-
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ("", 8801)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
@@ -53,11 +51,16 @@ while True:
                 print("Call step3 ...")
                 Step3(cpool, config)
             if data == 'start':
-                print("Start ILDE parser ...")
-                Step1(cpool, config)
-                Step2(cpool, config)
-                Step25(cpool, config, script_dir)
-                Step3(cpool, config)
+                coll = cpool['collection_ilde_brands']
+                res = coll.find().count()
+                if res < 1:
+                    print("Start ILDE parser ...")
+                    Step1(cpool, config)
+                    Step2(cpool, config)
+                    Step25(cpool, config, script_dir)
+                    Step3(cpool, config)
+                else:
+                    print("Allready started")
             if data:
                 connection.sendall(data)
             else:
