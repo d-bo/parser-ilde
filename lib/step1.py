@@ -24,7 +24,7 @@ class Step1:
         url = 'https://iledebeaute.ru/brands/'
 
         try:
-            page = urllib2.urlopen(url, timeout=100).read()
+            page = urllib2.urlopen(url, timeout=200).read()
         except urllib2.HTTPError as err:
             print(err)
             Utils._logfile('step1: '+str(err))

@@ -60,7 +60,7 @@ class Step25:
                     continue
 
             try:
-                response = urllib2.urlopen(zurl, timeout=10)
+                response = urllib2.urlopen(zurl, timeout=200)
                 pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
             except urllib2.HTTPError as err:
                 print 'X ['+item+']' + err

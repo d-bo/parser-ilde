@@ -34,7 +34,7 @@ class Step3:
             url = u['val']
 
             try:
-                page = urllib2.urlopen(url, timeout=10).read()
+                page = urllib2.urlopen(url, timeout=200).read()
             except urllib2.HTTPError as err:
                 failed_id = failed_links.insert_one({"val": url}).inserted_id
                 print(err)

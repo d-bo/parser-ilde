@@ -32,7 +32,7 @@ class Step2:
             for i in range(1,10):
                 url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
                 try:
-                    response = urllib2.urlopen(url, timeout=10)
+                    response = urllib2.urlopen(url, timeout=200)
                 except urllib2.HTTPError as err:
                     print 'X ['+url+']'
                     Utils._logfile('step2: '+'X ['+url+']')
