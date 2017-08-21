@@ -5,6 +5,7 @@ import ssl
 import json
 import socket
 import execjs
+import httplib
 import urllib2
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -39,6 +40,12 @@ class Step3:
                 failed_id = failed_links.insert_one({"val": url}).inserted_id
                 print(err)
                 Utils._logfile('step3: '+str(err))
+            except urllib2.URLError as err:
+                print("urllib2.URLError: ")
+                continue
+            except httplib.BadStatusLine as err:
+                print("httplib.BadStatusLine: ")
+                continue
             except socket.timeout as err:
                 print 'X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))

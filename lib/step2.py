@@ -4,6 +4,7 @@ import os
 import ssl
 import json
 import socket
+import httplib
 import urllib2
 from datetime import datetime
 from pymongo import MongoClient
@@ -36,6 +37,12 @@ class Step2:
                 except urllib2.HTTPError as err:
                     print 'X ['+url+']'
                     Utils._logfile('step2: '+'X ['+url+']')
+                except urllib2.URLError as err:
+                    print("urllib2.URLError: ")
+                    continue
+                except httplib.BadStatusLine as err:
+                    print("httplib.BadStatusLine: ")
+                    continue
                 except socket.timeout as err:
                     print 'X SOCKET TIMEOUT ' + str(err)
                     Utils._logfile('step2: '+'X SOCKET TIMEOUT ' + str(err))

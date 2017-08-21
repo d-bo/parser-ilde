@@ -3,6 +3,7 @@
 import ssl
 import json
 import socket
+import httplib
 import urllib2
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
@@ -28,6 +29,10 @@ class Step1:
         except urllib2.HTTPError as err:
             print(err)
             Utils._logfile('step1: '+str(err))
+        except urllib2.URLError as err:
+            print("urllib2.URLError: ")
+        except httplib.BadStatusLine as err:
+            print("httplib.BadStatusLine: ")
         except socket.timeout as err:
             print 'X SOCKET TIMEOUT ' + str(err)
             Utils._logfile('step1: '+'X SOCKET TIMEOUT ' + str(err))

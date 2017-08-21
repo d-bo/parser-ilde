@@ -4,6 +4,7 @@ import os
 import ssl
 import json
 import socket
+import httplib
 import urllib2
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -63,8 +64,14 @@ class Step25:
                 response = urllib2.urlopen(zurl, timeout=200)
                 pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
             except urllib2.HTTPError as err:
-                print 'X ['+item+']' + err
+                print 'X ['+item+']' + str(err)
                 Utils._logfile('step25: '+'X ['+item+']' + str(err))
+            except urllib2.URLError as err:
+                print("EXCEPTION urllib2.URLError: " + str(err))
+                continue
+            except httplib.BadStatusLine as err:
+                print("EXCEPTION httplib.BadStatusLine: " + str(err))
+                continue
             except socket.timeout as err:
                 print 'X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))

@@ -4,6 +4,7 @@ import os
 import ssl
 import csv
 import socket
+import httplib
 import urllib2
 from PIL import Image
 import urllib, cStringIO
@@ -120,10 +121,15 @@ class Utils:
                 url = url.replace('156', '500')
                 url = url.replace('257', '500')
                 try:
-                    file = cStringIO.StringIO(urllib2.urlopen(url, timeout=20).read())
+                    file = cStringIO.StringIO(urllib2.urlopen(url, timeout=200).read())
                 except urllib2.HTTPError as err:
                     print("Cannot open image url")
                     continue
+                except urllib2.URLError as err:
+                    print("urllib2.URLError: ")
+                    continue
+                except httplib.BadStatusLine as err:
+                    pass
                 except socket.timeout as err:
                     print 'X SOCKET TIMEOUT ' + str(err)
                     continue
