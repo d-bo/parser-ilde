@@ -30,14 +30,14 @@ class Step1:
             print(err)
             Utils._logfile('step1: '+str(err))
         except urllib2.URLError as err:
-            print("urllib2.URLError: ")
+            print("step1: urllib2.URLError: ")
         except httplib.BadStatusLine as err:
-            print("httplib.BadStatusLine: ")
+            print("step1: httplib.BadStatusLine: ")
         except socket.timeout as err:
-            print 'X SOCKET TIMEOUT ' + str(err)
+            print 'step1: X SOCKET TIMEOUT ' + str(err)
             Utils._logfile('step1: '+'X SOCKET TIMEOUT ' + str(err))
         except ssl.SSLError as err:
-            print 'SSLError: ' + str(err)
+            print 'step1: SSLError: ' + str(err)
 
         soup = BeautifulSoup(page, 'html.parser')
 

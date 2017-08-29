@@ -35,25 +35,25 @@ class Step2:
                 try:
                     response = urllib2.urlopen(url, timeout=200)
                 except urllib2.HTTPError as err:
-                    print 'X ['+url+']'
+                    print 'step2: X ['+url+']'
                     Utils._logfile('step2: '+'X ['+url+']')
                 except urllib2.URLError as err:
-                    print("urllib2.URLError: ")
+                    print("step2: urllib2.URLError: ")
                     continue
                 except httplib.BadStatusLine as err:
-                    print("httplib.BadStatusLine: ")
+                    print("step2: httplib.BadStatusLine: ")
                     continue
                 except socket.timeout as err:
-                    print 'X SOCKET TIMEOUT ' + str(err)
+                    print 'step2: X SOCKET TIMEOUT ' + str(err)
                     Utils._logfile('step2: '+'X SOCKET TIMEOUT ' + str(err))
                 except ssl.SSLError as err:
-                    print 'SSLError: ' + str(err)
+                    print 'step2: SSLError: ' + str(err)
                 else:
                     value = {'val': url, 'brand': a['name']}
                     double = collection.find_one(value)
                     if double is None:
                         _id = collection.insert_one(value).inserted_id
-                        print "Inserted: " + str(_id)
+                        print "step2: Inserted: " + str(_id)
                         Utils._logfile('step2: '+"Inserted: " + str(_id))
-                    print '+ ['+url+']'
+                    print 'step2: + ['+url+']'
                     Utils._logfile('step2: '+'+ ['+url+']')

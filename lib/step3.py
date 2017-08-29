@@ -41,16 +41,16 @@ class Step3:
                 print(err)
                 Utils._logfile('step3: '+str(err))
             except urllib2.URLError as err:
-                print("urllib2.URLError: ")
+                print("step3: urllib2.URLError: ")
                 continue
             except httplib.BadStatusLine as err:
-                print("httplib.BadStatusLine: ")
+                print("step3: httplib.BadStatusLine: ")
                 continue
             except socket.timeout as err:
-                print 'X SOCKET TIMEOUT ' + str(err)
+                print 'step3: X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))
             except ssl.SSLError as err:
-                print 'SSLError: ' + str(err)
+                print 'step3: SSLError: ' + str(err)
 
             soup = BeautifulSoup(page, 'html.parser')
 
@@ -70,7 +70,7 @@ class Step3:
                         _json = json.loads(_str)
                         _json_str = json.dumps(_json['basket'])
                     except:
-                        print('whooops! no json')
+                        print('step3: whooops! no json')
                         Utils._logfile('step3: '+'whooops! no json')
 
                     print(url)

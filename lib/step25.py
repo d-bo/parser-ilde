@@ -64,19 +64,19 @@ class Step25:
                 response = urllib2.urlopen(zurl, timeout=200)
                 pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
             except urllib2.HTTPError as err:
-                print 'X ['+item+']' + str(err)
-                Utils._logfile('step25: '+'X ['+item+']' + str(err))
+                print 'step25: X ['+str(item)+']' + str(err)
+                Utils._logfile('step25: '+'X ['+str(item)+']' + str(err))
             except urllib2.URLError as err:
-                print("EXCEPTION urllib2.URLError: " + str(err))
+                print("step25: urllib2.URLError: " + str(err))
                 continue
             except httplib.BadStatusLine as err:
-                print("EXCEPTION httplib.BadStatusLine: " + str(err))
+                print("step25: httplib.BadStatusLine: " + str(err))
                 continue
             except socket.timeout as err:
-                print 'X SOCKET TIMEOUT ' + str(err)
+                print 'step25: X SOCKET TIMEOUT ' + str(err)
                 Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))
             except ssl.SSLError as err:
-                print 'SSLError: ' + str(err)
+                print 'step25: SSLError: ' + str(err)
             else:
                 soup = BeautifulSoup(response, 'html.parser')
                 script = soup.find_all('script')
@@ -93,7 +93,7 @@ class Step25:
                             _json = json.loads(_str)
                             _json_str = json.dumps(_json['basket'])
                         except:
-                            print('whooops! no json')
+                            print('step25: whooops! no json')
                             Utils._logfile('step25: '+'whooops! no json')
 
                         Utils.insertProductItems(_json, cpool)
@@ -119,7 +119,7 @@ class Step25:
                         double = global_links.find_one(value)
                         if double is None:
                             _id = global_links.insert_one(value).inserted_id
-                            print "Page link inserted: " + str(_id)
+                            print "step25: Page link inserted: " + str(_id)
                             Utils._logfile('step25: '+"Page link inserted: " + str(_id))
                         #global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
