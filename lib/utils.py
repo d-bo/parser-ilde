@@ -257,6 +257,7 @@ class Utils:
         print(MC)
         if dbprefix is None:
             return {
+                'all_brands': MC[db]['all_brands'],
                 'collection_gestori': MC[db][config['coll']['gestori']],
                 'collection_sheets': MC[db][config['coll']['sheets']],
                 'collection_supplier': MC[db][config['coll']['supplier']],
@@ -274,6 +275,7 @@ class Utils:
             }
         else:
             return {
+                'all_brands': MC[db]['all_brands'],
                 'collection_gestori': MC[db][config['coll']['gestori']],
                 'collection_sheets': MC[db][dbprefix['daily']+"_"+config['coll']['sheets']],
                 'collection_supplier': MC[db][dbprefix['daily']+"_"+config['coll']['supplier']],
