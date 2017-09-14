@@ -59,7 +59,7 @@ class Step1:
                 value = {'val': contents}
                 double = coll_all.find_one(value)
                 if double is None:
-                    coll_all.insert_one({'val': contents})
+                    coll_all.insert_one({'val': contents, 'name': 'ilde'})
                     print("GLOBAL INSERT")
                 else:
                     print("GLOBAL DOUBLE")
