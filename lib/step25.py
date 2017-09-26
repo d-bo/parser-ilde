@@ -50,80 +50,83 @@ class Step25:
 
 
         # iterate
-        for item in cursor:
-            zurl = item['val']
+        if cursor:
+            for item in cursor:
+                zurl = item['val']
 
-            # restore point
-            if 'last_url' in locals():
-                if last_url == zurl:
-                    del last_url
-                else:
+                # restore point
+                if 'last_url' in locals():
+                    if last_url == zurl:
+                        del last_url
+                    else:
+                        continue
+
+                try:
+                    response = urllib2.urlopen(zurl, timeout=200)
+                    pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
+                except urllib2.HTTPError as err:
+                    print 'step25: X ['+str(item)+']' + str(err)
+                    Utils._logfile('step25: '+'X ['+str(item)+']' + str(err))
+                except urllib2.URLError as err:
+                    print("step25: urllib2.URLError: " + str(err))
                     continue
+                except httplib.BadStatusLine as err:
+                    print("step25: httplib.BadStatusLine: " + str(err))
+                    continue
+                except socket.timeout as err:
+                    print 'step25: X SOCKET TIMEOUT ' + str(err)
+                    Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))
+                except ssl.SSLError as err:
+                    print 'step25: SSLError: ' + str(err)
+                else:
+                    soup = BeautifulSoup(response, 'html.parser')
+                    script = soup.find_all('script')
+                    for t in script:
+                        _str = unicode(t.string)
+                        # looking for TMPCounter var in <script>
+                        if _str.find("var TMPCounter") != -1:
+                            _str = _str.replace('var TMPCounter = ', '')
+                            _str = _str.replace('//<!--', '')
+                            _str = _str.replace('//-->', '')
+                            _str = _str.replace('|| {};', '')
 
-            try:
-                response = urllib2.urlopen(zurl, timeout=200)
-                pagination.replace_one({'last': { '$exists': True }}, {'last': zurl})
-            except urllib2.HTTPError as err:
-                print 'step25: X ['+str(item)+']' + str(err)
-                Utils._logfile('step25: '+'X ['+str(item)+']' + str(err))
-            except urllib2.URLError as err:
-                print("step25: urllib2.URLError: " + str(err))
-                continue
-            except httplib.BadStatusLine as err:
-                print("step25: httplib.BadStatusLine: " + str(err))
-                continue
-            except socket.timeout as err:
-                print 'step25: X SOCKET TIMEOUT ' + str(err)
-                Utils._logfile('step25: '+'X SOCKET TIMEOUT ' + str(err))
-            except ssl.SSLError as err:
-                print 'step25: SSLError: ' + str(err)
-            else:
-                soup = BeautifulSoup(response, 'html.parser')
-                script = soup.find_all('script')
-                for t in script:
-                    _str = unicode(t.string)
-                    # looking for TMPCounter var in <script>
-                    if _str.find("var TMPCounter") != -1:
-                        _str = _str.replace('var TMPCounter = ', '')
-                        _str = _str.replace('//<!--', '')
-                        _str = _str.replace('//-->', '')
-                        _str = _str.replace('|| {};', '')
+                            try:
+                                _json = json.loads(_str)
+                                _json_str = json.dumps(_json['basket'])
+                            except:
+                                print('step25: whooops! no json')
+                                Utils._logfile('step25: '+'whooops! no json')
 
-                        try:
-                            _json = json.loads(_str)
-                            _json_str = json.dumps(_json['basket'])
-                        except:
-                            print('step25: whooops! no json')
-                            Utils._logfile('step25: '+'whooops! no json')
+                            Utils.insertProductItems(_json, cpool)
 
-                        Utils.insertProductItems(_json, cpool)
+                            # extract image & save to folder
+                            if os.getenv('ILDE_IMG_DIR') is None:
+                                img_dir = script_dir+"/img/"
+                            else:
+                                img_dir = os.getenv('ILDE_IMG_DIR')
+                            
+                            Utils.extractImg(_json['basket'], img_dir)
 
-                        # extract image & save to folder
-                        if os.getenv('ILDE_IMG_DIR') is None:
-                            img_dir = script_dir+"/img/"
-                        else:
-                            img_dir = os.getenv('ILDE_IMG_DIR')
-                        
-                        Utils.extractImg(_json['basket'], img_dir)
+                    # continue
 
-                # continue
+                    # extract single product page
+                    # save
+                    hrefs = soup.find_all("a", class_="b-showcase__item__img")
 
-                # extract single product page
-                # save
-                hrefs = soup.find_all("a", class_="b-showcase__item__img")
-
-                for h in hrefs:
-                    if h['href'] != '':
-                        url = 'http://iledebeaute.ru' + str(h['href'])
-                        value = {'val': url, 'brand': item['brand']}
-                        double = global_links.find_one(value)
-                        if double is None:
-                            _id = global_links.insert_one(value).inserted_id
-                            print "step25: Page link inserted: " + str(_id)
-                            Utils._logfile('step25: '+"Page link inserted: " + str(_id))
-                        #global_links.replace_one({'last': { '$exists': True }}, {'last': url})
+                    for h in hrefs:
+                        if h['href'] != '':
+                            url = 'http://iledebeaute.ru' + str(h['href'])
+                            value = {'val': url, 'brand': item['brand']}
+                            double = global_links.find_one(value)
+                            if double is None:
+                                _id = global_links.insert_one(value).inserted_id
+                                print "step25: Page link inserted: " + str(_id)
+                                Utils._logfile('step25: '+"Page link inserted: " + str(_id))
+                            #global_links.replace_one({'last': { '$exists': True }}, {'last': url})
 
 
 
-        # must be completed
-        pagination.replace_one({'last': { '$exists': True }}, {'last': ''})
+            # must be completed
+            pagination.replace_one({'last': { '$exists': True }}, {'last': ''})
+        else:
+            print("Cursor not found")
