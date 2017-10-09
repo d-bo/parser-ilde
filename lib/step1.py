@@ -54,12 +54,11 @@ class Step1:
             val = o['value'].strip('/')
             val = str(val)
             if val is not "":
-
                 # brands global pool double check
-                value = {'val': contents}
+                value = {'val': contents, 'source': 'ilde'}
                 double = coll_all.find_one(value)
                 if double is None:
-                    coll_all.insert_one({'val': contents, 'name': 'ilde'})
+                    coll_all.insert_one({'val': contents, 'source': 'ilde'})
                     print("GLOBAL INSERT")
                 else:
                     print("GLOBAL DOUBLE")
