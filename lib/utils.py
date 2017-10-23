@@ -202,7 +202,10 @@ class Utils:
             else:
                 # update final
                 if 'cod_good' in locals():
-                    collection_final.find_one_and_update({'articul': item['articul']}, {'$set': {'gestori': cod_good}})
+                    collection_final.find_one_and_update({'articul': item['articul']}, 
+                    {
+                        '$set': {'gestori': cod_good, 'listingprice': item['p_price']}
+                    })
 
                 # insert price
                 Utils.insertPrice(cpool, price_doc)
