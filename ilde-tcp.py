@@ -3,12 +3,13 @@
 import os
 import sys
 import socket
+import syslog
+import configparser
 from lib.step1 import Step1
 from lib.step2 import Step2
-from lib.step25 import Step25
 from lib.step3 import Step3
-import configparser
 from lib.utils import Utils
+from lib.step25 import Step25
 from datetime import datetime
 
 
@@ -55,12 +56,14 @@ while True:
                 res = coll.find().count()
                 if res < 1:
                     print("Start ILDE parser ...")
+                    syslog.syslog("Start ILDE parser ...")
                     Step1(cpool, config)
                     Step2(cpool, config)
                     Step25(cpool, config, script_dir)
                     Step3(cpool, config)
                 else:
                     print("Allready started")
+                    syslog.syslog("ILDE allready started")
             if data:
                 connection.sendall(data)
             else:
