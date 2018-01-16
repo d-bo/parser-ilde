@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import ssl
 import json
 import syslog
@@ -42,62 +43,39 @@ class Step2:
                 print url
                 try:
                     response = urllib2.urlopen(url, timeout=200)
-                except urllib2.HTTPError as err:
-                    print err
-                    syslog.syslog(err)
+                except:
+                    print "Exception urllib2.urlopen"
                     continue
-                except urllib2.URLError as err:
-                    print err
-                    syslog.syslog(err)
-                    continue
-                except httplib.BadStatusLine as err:
-                    print err
-                    syslog.syslog(err)
-                    continue
-                except socket.timeout as err:
-                    print err
-                    syslog.syslog(err)
-                    continue
-                except ssl.SSLError as err:
-                    print err
-                    syslog.syslog(err)
-                    continue
-                else:
-                    value = {'val': url, 'brand': a['name']}
 
-                    if self.checkEmptyPage(url, a['name'], cpool) > 0:
+                value = {'val': url, 'brand': a['name']}
 
-                        _n = 0 # count new
-                        _d = 0 # count double
+                if self.checkEmptyPage(response, a['name'], cpool) > 0:
 
-                        double = collection.find_one(value)
-                        if double is None:
-                            _id = collection.insert_one(value).inserted_id
-                            _n = _n + 1
-                        else:
-                            _d = _d + 1
+                    _n = 0 # count new
+                    _d = 0 # count double
 
+                    double = collection.find_one(value)
+                    if double is None:
+                        _id = collection.insert_one(value).inserted_id
+                        _n = _n + 1
                     else:
-                        print "No items\r\n"
+                        _d = _d + 1
+
+                else:
+                    break
 
         syslog.syslog("Step2 new "+str(_n)+", double "+str(_d))
 
     """
     Empty products list check
     """
-    def checkEmptyPage(self, url, brand, cpool):
-        try:
-            response = urllib2.urlopen(url, timeout=200)
-        except:
-            print "Exception "+url
-            syslog.syslog("Exception "+url)
-            return False
-
+    def checkEmptyPage(self, response, brand, cpool):
         # Parse html
         c = 0
         soup = BeautifulSoup(response, 'html.parser')
         divs = soup.find('div', {'class': 'b-showcase b-showcase_sheet'})
         if divs is not None:
+            allready_extracted = 0
             for i in divs.find_all('div', {'class': 'b-showcase__item'}):
                 hrefs = i.find_all("a", class_="b-showcase__item__img")
                 if hrefs is not None:
@@ -110,6 +88,8 @@ class Step2:
                             if double is None:
                                 _id = global_links.insert_one(value).inserted_id
                                 print "Extracted: "+str(purl)
-
-
+                            else:
+                                allready_extracted = allready_extracted + 1
+                                
+        if allready_extracted > 0: print "Allready extracted "+str(allready_extracted)
         if c > 0: return count

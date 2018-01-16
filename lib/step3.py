@@ -36,21 +36,8 @@ class Step3:
 
             try:
                 page = urllib2.urlopen(url, timeout=200).read()
-            except urllib2.HTTPError as err:
-                failed_id = failed_links.insert_one({"val": url}).inserted_id
-                print(err)
-                Utils._logfile('step3: '+str(err))
-            except urllib2.URLError as err:
-                print("step3: urllib2.URLError: ")
-                continue
-            except httplib.BadStatusLine as err:
-                print("step3: httplib.BadStatusLine: ")
-                continue
-            except socket.timeout as err:
-                print 'step3: X SOCKET TIMEOUT ' + str(err)
-                Utils._logfile('step3: '+'X SOCKET TIMEOUT ' + str(err))
-            except ssl.SSLError as err:
-                print 'step3: SSLError: ' + str(err)
+            except:
+                print "Step3 urllib2 error"
 
             soup = BeautifulSoup(page, 'html.parser')
 
