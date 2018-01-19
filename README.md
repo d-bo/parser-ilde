@@ -33,3 +33,16 @@ pip install -r requirements.txt
 echo '/home/administrator/static/img' > ILDE_IMG_PATH
 deactivate
 ```
+
+### Docker
+
+```bash
+# Start
+cd parser-ilde
+sudo docker build -t ga/parser-ilde .
+# !!! network host -> localhost MongoDB
+sudo docker run --network host -d --restart always --log-driver syslog ga/parser-ilde:latest
+# Stop
+sudo docker ps
+sudo docker kill <image_name>
+```

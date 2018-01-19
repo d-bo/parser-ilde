@@ -22,7 +22,6 @@ class Step1:
         coll_all = cpool['all_brands']
         coll = cpool['collection_ilde_brands']
         print(coll)
-        Utils._logfile('step1: '+str(coll))
 
         url = 'https://iledebeaute.ru/brands/'
         syslog.syslog("Start step1 ...")
@@ -32,7 +31,6 @@ class Step1:
         except urllib2.HTTPError as err:
             print(err)
             syslog.syslog(err)
-            Utils._logfile('step1: '+str(err))
         except urllib2.URLError as err:
             print("step1: urllib2.URLError: ")
             syslog.syslog(err)

@@ -155,13 +155,15 @@ class Utils:
 
 
     @staticmethod
-    def insertProductItems(basket, cpool, preview_img_link = None):
+    def insertProductItems(basket, cpool, scraped, preview_img_link = None):
 
         """ mongodb insert """
         collection = cpool['collection_ilde']
         collection_final = cpool['collection_ilde_final']
 
         for item in basket['basket']:
+            print item
+            print scraped
             # is allready in final collection ?
             double = collection_final.find_one({"articul": item['articul']})
             # document into price collection
@@ -204,7 +206,16 @@ class Utils:
                 if 'cod_good' in locals():
                     collection_final.find_one_and_update({'articul': item['articul']}, 
                     {
-                        '$set': {'gestori': cod_good, 'listingprice': item['p_price']}
+                        '$set': {
+                            'gestori': cod_good,
+                            'listingprice': item['p_price'],
+                            'Navi': scraped['Navi'],
+                            'big_pic': scraped['big_pic'],
+                            'desc': scraped['desc'],
+                            'vol': scraped['volume'],
+                            'url': scraped['url'],
+                            'vip_price': scraped['vip_price']
+                        }
                     })
 
                 # insert price
