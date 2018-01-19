@@ -35,6 +35,9 @@ class Step2:
 
         syslog.syslog("Start step2 ...")
 
+        _n = 0 # count new
+        _d = 0 # count double
+
         # iterate brands
         for a in brands:
             for i in range(1,10):
@@ -50,10 +53,6 @@ class Step2:
                 value = {'val': url, 'brand': a['name']}
 
                 if self.checkEmptyPage(response, a['name'], cpool) > 0:
-
-                    _n = 0 # count new
-                    _d = 0 # count double
-
                     double = collection.find_one(value)
                     if double is None:
                         _id = collection.insert_one(value).inserted_id
@@ -91,5 +90,4 @@ class Step2:
                             else:
                                 allready_extracted = allready_extracted + 1
                                 
-        if allready_extracted > 0: print "Allready extracted "+str(allready_extracted)
         if c > 0: return count
