@@ -214,7 +214,8 @@ class Utils:
                             'desc': scraped['desc'],
                             'vol': scraped['volume'],
                             'url': scraped['url'],
-                            'vip_price': scraped['vip_price']
+                            'vip_price': scraped['vip_price'],
+                            'LastUpdate': Utils.getDbprefix()['daily']
                         }
                     })
 
