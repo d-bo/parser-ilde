@@ -44,9 +44,6 @@ while True:
             if data == 'step2':
                 print("Call step2 ...")
                 Step2(cpool, config)
-            if data == 'step25':
-                print("Call step25 ...")
-                Step25(cpool, config, script_dir)
             if data == 'step3':
                 print("Call step3 ...")
                 Step3(cpool, config)
@@ -58,7 +55,6 @@ while True:
                     syslog.syslog("Start ILDE parser ...")
                     Step1(cpool, config)
                     Step2(cpool, config)
-                    Step25(cpool, config, script_dir)
                     Step3(cpool, config)
                 else:
                     print("Allready started")
