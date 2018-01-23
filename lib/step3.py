@@ -41,6 +41,7 @@ class Step3:
         for u in cursor:
 
             url = u['val']
+            syslog.syslog(url)
 
             try:
                 page = urllib2.urlopen(url, timeout=200).read()

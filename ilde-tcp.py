@@ -25,7 +25,7 @@ dbprefix = Utils.getDbprefix()
 cpool = Utils.getCollectionPool(config, dbprefix)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ("", 8801)
+server_address = ("127.0.0.1", 8801)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
 sock.bind(server_address)
 
@@ -35,6 +35,7 @@ while True:
     connection, client_address = sock.accept()
     try:
         print >>sys.stderr, 'connection from', client_address
+        syslog.syslog("Connection from: "+str(client_address))
         while True:
             data = connection.recv(16)
             print(data)
@@ -63,6 +64,9 @@ while True:
                 connection.sendall(data)
             else:
                 break
+    except:
+        syslog.syslog("ILDE allready started")
+        print "sock.accept() exception"
     finally:
         # Clean up the connection
         connection.close()

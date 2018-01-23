@@ -43,11 +43,13 @@ class Step2:
             for i in range(1,10):
                 # TODO stop i + 1 first empty page
                 url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
+                syslog.syslog(url)
                 print url
                 try:
-                    response = urllib2.urlopen(url, timeout=200)
+                    response = urllib2.urlopen(url, timeout=3)  # 2 seconds
                 except:
                     print "Exception urllib2.urlopen"
+                    syslog.syslog("Exception urllib2.urlopen")
                     continue
 
                 value = {'val': url, 'brand': a['name']}
