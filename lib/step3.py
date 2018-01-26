@@ -3,6 +3,7 @@
 import os
 import re
 import ssl
+import sys
 import json
 import socket
 import syslog
@@ -37,10 +38,18 @@ class Step3:
 
         # Extracted from non-script html tags
         scraped = {}
+        cycflag = False
 
         for u in cursor:
 
             url = u['val']
+
+            if cycflag is False:
+                if url != "http://iledebeaute.ru/shop/accessories/clearning/schetka-nasadka_dlya_tela_smart_profile;2rvp/":
+                    continue
+                else:
+                    cycflag = True
+
             syslog.syslog(url)
 
             try:
@@ -81,7 +90,8 @@ class Step3:
                     for de in desc:
                         paragraphs = de.find_all('p')
                         for pa in paragraphs:
-                            descs.append(pa.contents[0])
+                            if not isinstance(pa.contents[0], Tag):
+                                descs.append(pa.contents[0])
                     if len(descs) > 0:
                         scraped['desc'] = " ".join(descs)
 
