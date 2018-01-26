@@ -46,7 +46,7 @@ class Step2:
                 syslog.syslog(url)
                 print url
                 try:
-                    response = urllib2.urlopen(url, timeout=3)  # 2 seconds
+                    response = urllib2.urlopen(url, timeout=10)  # 2 seconds
                 except:
                     print "Exception urllib2.urlopen"
                     syslog.syslog("Exception urllib2.urlopen")

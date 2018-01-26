@@ -160,12 +160,25 @@ class Utils:
         """ mongodb insert """
         collection = cpool['collection_ilde']
         collection_final = cpool['collection_ilde_final']
+        brand_coll = cpool['collection_ilde_brands']
 
         for item in basket['basket']:
             print item
             print scraped
             # is allready in final collection ?
             double = collection_final.find_one({"articul": item['articul']})
+
+            item['brand'] = item['brand'].upper()
+
+            # New brand ??
+            double = brand_coll.find_one({'source': 'ilde', 'val': item['brand']})
+            if double is None:
+                brand_id = brand_coll.insert_one({
+                        'source': 'ilde',
+                        'val': item['brand']
+                    }).inserted_id
+                print "ILDE new brand: "+item['brand']+" / "+brand_id
+
             # document into price collection
             price_doc = {
                 'articul': item['articul'],
@@ -209,6 +222,7 @@ class Utils:
                     collection_final.find_one_and_update({'articul': item['articul']}, 
                     {
                         '$set': {
+                            'brand': item['brand'],
                             'gestori': cod_good,
                             'listingprice': item['p_price'],
                             'Navi': scraped['Navi'],

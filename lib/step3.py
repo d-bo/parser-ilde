@@ -45,7 +45,7 @@ class Step3:
             url = u['val']
 
             if cycflag is False:
-                if url != "http://iledebeaute.ru/shop/accessories/clearning/schetka-nasadka_dlya_tela_smart_profile;2rvp/":
+                if url != "http://iledebeaute.ru/shop/care/face/lips/zaschitnyiy_balzam_dlya_gub;2qma/":
                     continue
                 else:
                     cycflag = True
@@ -53,7 +53,7 @@ class Step3:
             syslog.syslog(url)
 
             try:
-                page = urllib2.urlopen(url, timeout=200).read()
+                page = urllib2.urlopen(url, timeout=10).read()
             except:
                 syslog.syslog("Step3 urllib2 error")
                 print "Step3 urllib2 error"

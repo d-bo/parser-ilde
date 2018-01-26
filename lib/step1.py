@@ -27,7 +27,7 @@ class Step1:
         syslog.syslog("Start step1 ...")
 
         try:
-            page = urllib2.urlopen(url, timeout=200).read()
+            page = urllib2.urlopen(url, timeout=10).read()
         except:
             print "step1 urllib2 error"
             syslog.syslog("step1 urllib2 error")
