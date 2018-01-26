@@ -198,6 +198,8 @@ class Utils:
                 # final collection
                 del item['p_price']
                 del item['p_original_price']
+                # Insert time
+                item['LastUpdate'] = Utils.getDbprefix()['daily']
                 _id = collection_final.insert_one(item).inserted_id
                 Utils.count_new = Utils.count_new + 1
                 Utils.Log(cpool, 'ilde', 'new_articul', item['articul'])

@@ -28,21 +28,9 @@ class Step1:
 
         try:
             page = urllib2.urlopen(url, timeout=200).read()
-        except urllib2.HTTPError as err:
-            print(err)
-            syslog.syslog(err)
-        except urllib2.URLError as err:
-            print("step1: urllib2.URLError: ")
-            syslog.syslog(err)
-        except httplib.BadStatusLine as err:
-            print("step1: httplib.BadStatusLine: ")
-            syslog.syslog(err)
-        except socket.timeout as err:
-            print 'step1: X SOCKET TIMEOUT ' + str(err)
-            syslog.syslog(err)
-        except ssl.SSLError as err:
-            print 'step1: SSLError: ' + str(err)
-            syslog.syslog(err)
+        except:
+            print "step1 urllib2 error"
+            syslog.syslog("step1 urllib2 error")
 
         soup = BeautifulSoup(page, 'html.parser')
 
