@@ -116,7 +116,7 @@ class Step3:
 
                     # Volume
                     scraped['volume'] = None
-                    volume = soup.find_all('a', text=re.compile('Объём'))
+                    volume = soup.find_all('b', text=re.compile('Объём'))
                     for vol in volume:
                         print "VOL"+vol.string
                         scraped['vol'] = vol.string
