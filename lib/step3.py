@@ -25,6 +25,7 @@ class Step3:
     def __init__(self, cpool, config = None):
 
         syslog.syslog("Start step3 ...")
+        print "Start step3 ..."
 
         collection = cpool['collection_ilde']
         collection_final = cpool['collection_ilde_final']
@@ -44,11 +45,13 @@ class Step3:
 
             url = u['val']
 
+            """
             if cycflag is False:
                 if url != "http://iledebeaute.ru/shop/care/face/lips/zaschitnyiy_balzam_dlya_gub;2qma/":
                     continue
                 else:
                     cycflag = True
+            """
 
             syslog.syslog(url)
 
@@ -135,4 +138,5 @@ class Step3:
 
             i = i + 1
 
-        syslog.syslog("End step3")
+        syslog.syslog("End step3.")
+        print "End step3."

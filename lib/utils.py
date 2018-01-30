@@ -177,7 +177,6 @@ class Utils:
                         'source': 'ilde',
                         'val': item['brand']
                     }).inserted_id
-                print "ILDE new brand: "+item['brand']+" / "+brand_id
 
             # document into price collection
             price_doc = {

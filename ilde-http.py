@@ -40,7 +40,8 @@ def start():
     else:
         print("ILDE allready started")
         syslog.syslog("ILDE allready started")
-    syslog.syslog('ILDE end.')
+    syslog.syslog('ILDE end')
+    print("ILDE end")
     return "ILDE start"
 
 if __name__ == "__main__":

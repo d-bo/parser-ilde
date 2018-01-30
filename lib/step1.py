@@ -25,6 +25,7 @@ class Step1:
 
         url = 'https://iledebeaute.ru/brands/'
         syslog.syslog("Start step1 ...")
+        print "Start step1 ..."
 
         try:
             page = urllib2.urlopen(url, timeout=10).read()
@@ -72,3 +73,4 @@ class Step1:
 
         syslog.syslog("Step1 Global: new "+str(inserted_global_new)+", double "+str(inserted_global_double)
             +"; today: new "+str(inserted_today_new)+", double "+str(inserted_today_double))
+        print "End step1"

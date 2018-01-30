@@ -34,6 +34,7 @@ class Step2:
         collection = cpool['collection_pagination']
 
         syslog.syslog("Start step2 ...")
+        print "Start step2 ..."
 
         _n = 0 # count new
         _d = 0 # count double
@@ -46,7 +47,7 @@ class Step2:
                 syslog.syslog(url)
                 print url
                 try:
-                    response = urllib2.urlopen(url, timeout=10)  # 2 seconds
+                    response = urllib2.urlopen(url, timeout=10)  # 10 seconds
                 except:
                     print "Exception urllib2.urlopen"
                     syslog.syslog("Exception urllib2.urlopen")
@@ -66,6 +67,7 @@ class Step2:
                     break
 
         syslog.syslog("Step2 new "+str(_n)+", double "+str(_d))
+        print "Step2 new "+str(_n)+", double "+str(_d)
 
     """
     Empty products list check
