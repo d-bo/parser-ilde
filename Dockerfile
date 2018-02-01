@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 EXPOSE 8801
-CMD [ "python", "./ilde-tcp.py" ]
+CMD [ "python", "./ilde-http.py" ]
