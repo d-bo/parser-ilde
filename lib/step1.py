@@ -4,8 +4,7 @@ import ssl
 import json
 import socket
 import syslog
-import httplib
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
@@ -25,12 +24,12 @@ class Step1:
 
         url = 'https://iledebeaute.ru/brands/'
         syslog.syslog("Start step1 ...")
-        print "Start step1 ..."
+        print("Start step1 ...")
 
         try:
-            page = urllib2.urlopen(url, timeout=10).read()
+            page = urllib.request.urlopen(url, timeout=10).read()
         except:
-            print "step1 urllib2 error"
+            print("step1 urllib2 error")
             syslog.syslog("step1 urllib2 error")
 
         soup = BeautifulSoup(page, 'html.parser')
@@ -47,9 +46,10 @@ class Step1:
         for o in select.find_all('option'):
             contents = ''.join(o.contents)
             contents = contents.encode('utf-8')
-            contents = contents.strip('*')
+            contents = contents.strip('*'.encode())
             contents = contents.strip()
             print(contents)
+            syslog.syslog("ILDE brand: "+str(contents))
             val = o['value'].strip('/')
             val = str(val)
             if val is not "":
@@ -73,4 +73,4 @@ class Step1:
 
         syslog.syslog("Step1 Global: new "+str(inserted_global_new)+", double "+str(inserted_global_double)
             +"; today: new "+str(inserted_today_new)+", double "+str(inserted_today_double))
-        print "End step1"
+        print("End step1")

@@ -1,6 +1,10 @@
 ## Install
 
 ```bash
+#sudo pip install beautifulsoup4
+#sudo pip install pymongo
+#sudo pip install Pillow
+
 cd parser_ilde
 virtualenv ilde
 source ilde/bin/activate

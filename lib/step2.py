@@ -6,8 +6,7 @@ import ssl
 import json
 import syslog
 import socket
-import httplib
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from datetime import datetime
 from pymongo import MongoClient
@@ -34,7 +33,7 @@ class Step2:
         collection = cpool['collection_pagination']
 
         syslog.syslog("Start step2 ...")
-        print "Start step2 ..."
+        print("Start step2 ...")
 
         _n = 0 # count new
         _d = 0 # count double
@@ -45,11 +44,11 @@ class Step2:
                 # TODO stop i + 1 first empty page
                 url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
                 syslog.syslog(url)
-                print url
+                print(url)
                 try:
-                    response = urllib2.urlopen(url, timeout=10)  # 10 seconds
+                    response = urllib.request.urlopen(url, timeout=10)  # 10 seconds
                 except:
-                    print "Exception urllib2.urlopen"
+                    print("Exception urllib2.urlopen")
                     syslog.syslog("Exception urllib2.urlopen")
                     continue
 
@@ -67,7 +66,7 @@ class Step2:
                     break
 
         syslog.syslog("Step2 new "+str(_n)+", double "+str(_d))
-        print "Step2 new "+str(_n)+", double "+str(_d)
+        print(("Step2 new "+str(_n)+", double "+str(_d)))
 
     """
     Empty products list check
@@ -90,8 +89,9 @@ class Step2:
                             double = global_links.find_one(value)
                             if double is None:
                                 _id = global_links.insert_one(value).inserted_id
-                                print "Extracted: "+str(purl)
+                                print(("Extracted: "+str(purl)))
                             else:
                                 allready_extracted = allready_extracted + 1
                                 
         if c > 0: return count
+        return 0

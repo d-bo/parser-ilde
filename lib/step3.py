@@ -7,9 +7,7 @@ import sys
 import json
 import socket
 import syslog
-import execjs
-import httplib
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from bs4 import NavigableString, Tag
 from datetime import datetime
@@ -25,7 +23,7 @@ class Step3:
     def __init__(self, cpool, config = None):
 
         syslog.syslog("Start step3 ...")
-        print "Start step3 ..."
+        print("Start step3 ...")
 
         collection = cpool['collection_ilde']
         collection_final = cpool['collection_ilde_final']
@@ -45,9 +43,10 @@ class Step3:
 
             url = u['val']
 
+            # Comment out to start from target url
             """
             if cycflag is False:
-                if url != "http://iledebeaute.ru/shop/care/face/lips/zaschitnyiy_balzam_dlya_gub;2qma/":
+                if url != "http://iledebeaute.ru/shop/brands/mac/accessories/brush/fluff_213_kist_dlya_teney;4v9m/":
                     continue
                 else:
                     cycflag = True
@@ -56,10 +55,10 @@ class Step3:
             syslog.syslog(url)
 
             try:
-                page = urllib2.urlopen(url, timeout=10).read()
+                page = urllib.request.urlopen(url, timeout=10).read()
             except:
                 syslog.syslog("Step3 urllib2 error")
-                print "Step3 urllib2 error"
+                print("Step3 urllib2 error")
 
             soup = BeautifulSoup(page, 'html.parser')
 
@@ -67,7 +66,7 @@ class Step3:
             preview_img_link = soup.find('a', {'class': 'preview'})
             script = soup.find_all('script')
             for t in script:
-                _str = unicode(t.string)
+                _str = str(t.string)
                 # looking for TMPCounter var in <script>
                 if _str.find("var TMPCounter") != -1:
                     _str = _str.replace('var TMPCounter = ', '')
@@ -112,16 +111,16 @@ class Step3:
                         if isinstance(brc, NavigableString):
                             continue
                         if isinstance(brc, Tag):
-                            crumbs.append(unicode(brc.string))
+                            crumbs.append(str(brc.string))
                     if len(crumbs) > 0:
                         scraped['Navi'] = ";".join(crumbs)
-                        print "NAVI: "+scraped['Navi']
+                        print(("NAVI: "+scraped['Navi']))
 
                     # Volume
                     scraped['volume'] = None
                     volume = soup.find_all('b', text=re.compile('Объём'))
                     for vol in volume:
-                        print "VOL"+vol.string
+                        print(("VOL"+vol.string))
                         scraped['vol'] = vol.string
 
                     # VIP price
@@ -129,7 +128,7 @@ class Step3:
                     vip = soup.find_all('dd', {'class': 'b-product-price__card b-product-price__card--vip'})
                     for vi in vip:
                         vip_price = vi.string.encode('utf-8')
-                        vip_price = vip_price.replace("руб.", "")
+                        vip_price = vip_price.replace("руб.".encode(), "".encode())
                         vip_price = vip_price.strip()
                         scraped['vip_price'] = vip_price
 
@@ -139,4 +138,4 @@ class Step3:
             i = i + 1
 
         syslog.syslog("End step3.")
-        print "End step3."
+        print("End step3.")

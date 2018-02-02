@@ -4,10 +4,10 @@ import os
 import ssl
 import csv
 import socket
-import httplib
-import urllib2
+import http.client
+import urllib.request, urllib.error, urllib.parse
 from PIL import Image
-import urllib, cStringIO
+import urllib.request, urllib.parse, urllib.error, io
 from datetime import datetime
 from pymongo import MongoClient
 
@@ -121,20 +121,20 @@ class Utils:
                 url = url.replace('156', '500')
                 url = url.replace('257', '500')
                 try:
-                    file = cStringIO.StringIO(urllib2.urlopen(url, timeout=200).read())
-                except urllib2.HTTPError as err:
+                    file = io.StringIO(urllib.request.urlopen(url, timeout=200).read())
+                except urllib.error.HTTPError as err:
                     print("Cannot open image url")
                     continue
-                except urllib2.URLError as err:
+                except urllib.error.URLError as err:
                     print("urllib2.URLError: ")
                     continue
-                except httplib.BadStatusLine as err:
+                except http.client.BadStatusLine as err:
                     pass
                 except socket.timeout as err:
-                    print 'X SOCKET TIMEOUT ' + str(err)
+                    print('X SOCKET TIMEOUT ' + str(err))
                     continue
                 except ssl.SSLError as err:
-                    print 'SSLError: ' + str(err)
+                    print('SSLError: ' + str(err))
 
                 img = Image.open(file)
                 new_dir = img_dir + "/"
@@ -142,11 +142,11 @@ class Utils:
                     os.makedirs(new_dir)
                 new_file = new_dir+str(item['articul'])+".jpg"
                 if os.path.isfile(new_file) is not True:
-                    print("Image saved url: "+url)
+                    print(("Image saved url: "+url))
                     img.save(new_file)
                     Utils.img_new = Utils.img_new + 1
                 else:
-                    print("Image allready exists: "+new_file)
+                    print(("Image allready exists: "+new_file))
                     Utils.img_double = Utils.img_double + 1
 
             else:
@@ -163,8 +163,8 @@ class Utils:
         brand_coll = cpool['collection_ilde_brands']
 
         for item in basket['basket']:
-            print item
-            print scraped
+            print(item)
+            print(scraped)
             # is allready in final collection ?
             double = collection_final.find_one({"articul": item['articul']})
 
@@ -192,7 +192,7 @@ class Utils:
             match_articul = gestori.find_one({'Artic': item['articul']})
 
             if match_articul is not None:
-                print("Match articul: ", item['articul'])
+                print(("Match articul: ", item['articul']))
                 cod_good = match_articul['Cod_good']
                 #print("Match articul: ", item['articul'], list(match_articul))
 
@@ -202,7 +202,7 @@ class Utils:
                 # insert img link to document
                 if preview_img_link is not None:
                     item['image'] = preview_img_link['href']
-                print("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n")
+                print(("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n"))
 
                 # insert price
                 Utils.insertPrice(cpool, price_doc)
@@ -237,7 +237,7 @@ class Utils:
                 # insert price
                 Utils.insertPrice(cpool, price_doc)
 
-                print "Double: articul "+item['articul']
+                print("Double: articul "+item['articul'])
                 Utils.count_double = Utils.count_double + 1
 
 

@@ -32,11 +32,11 @@ def start():
 
     coll = cpool['collection_ilde_brands']
     syslog.syslog("ILDE: "+str(coll))
-    print(str(coll))
+    print((str(coll)))
 
     res = coll.find().count()
-    print("COUNT RES: "+str(res))
-    print(Utils.getDbprefix())
+    print(("COUNT RES: "+str(res)))
+    print((Utils.getDbprefix()))
 
     if res < 1:
         Step1(cpool, config)
@@ -45,9 +45,10 @@ def start():
     else:
         print("ILDE allready started")
         syslog.syslog("ILDE allready started")
+
     syslog.syslog('ILDE end')
     print("ILDE end")
     return '@app.route("/start")'
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8801')
+    app.run(host='0.0.0.0', port=8801, debug=True)
