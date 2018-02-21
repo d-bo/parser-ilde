@@ -130,7 +130,7 @@ class Step3:
                         vip_price = vi.string.encode('utf-8')
                         vip_price = vip_price.replace("руб.".encode(), "".encode())
                         vip_price = vip_price.strip()
-                        scraped['vip_price'] = vip_price
+                        scraped['vip_price'] = str(vip_price)
 
                     Utils.insertProductItems(_json, cpool, scraped, preview_img_link)
                     global_links.replace_one({'last': { '$exists': True }}, {'last': url})

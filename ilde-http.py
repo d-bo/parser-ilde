@@ -45,6 +45,7 @@ def start():
     else:
         print("ILDE allready started")
         syslog.syslog("ILDE allready started")
+        return 'ILDE allready started: '+str(Utils.getDbprefix())
 
     syslog.syslog('ILDE end')
     print("ILDE end")
