@@ -45,7 +45,7 @@ deactivate
 cd parser-ilde
 sudo docker build -t ga/parser-ilde .
 # !!! network host -> localhost MongoDB
-sudo docker run --network host -d --restart always --log-driver syslog ga/parser-ilde:latest
+sudo docker run --network host -d --restart always --log-driver syslog gapple/parser-ilde:latest
 # Stop
 sudo docker ps
 sudo docker kill <image_name>
