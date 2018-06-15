@@ -40,30 +40,31 @@ class Step2:
 
         # iterate brands
         for a in brands:
-            for i in range(1,10):
-                # TODO stop i + 1 first empty page
-                url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
-                syslog.syslog(url)
-                print(url)
-                try:
-                    response = urllib.request.urlopen(url, timeout=10)  # 10 seconds
-                except:
-                    print("Exception urllib2.urlopen")
-                    syslog.syslog("Exception urllib2.urlopen")
-                    continue
+            if 'name' in a:
+                for i in range(1,10):
+                    # TODO stop i + 1 first empty page
+                    url = 'http://iledebeaute.ru/brands/' + a['name'] + '/catalog/page' + str(i) + '/?perpage=72'
+                    syslog.syslog(url)
+                    print(url)
+                    try:
+                        response = urllib.request.urlopen(url, timeout=10)  # 10 seconds
+                    except:
+                        print("Exception urllib2.urlopen")
+                        syslog.syslog("Exception urllib2.urlopen")
+                        continue
 
-                value = {'val': url, 'brand': a['name']}
+                    value = {'val': url, 'brand': a['name']}
 
-                if self.checkEmptyPage(response, a['name'], cpool) > 0:
-                    double = collection.find_one(value)
-                    if double is None:
-                        _id = collection.insert_one(value).inserted_id
-                        _n = _n + 1
+                    if self.checkEmptyPage(response, a['name'], cpool) > 0:
+                        double = collection.find_one(value)
+                        if double is None:
+                            #_id = collection.insert_one(value).inserted_id
+                            _n = _n + 1
+                        else:
+                            _d = _d + 1
+
                     else:
-                        _d = _d + 1
-
-                else:
-                    break
+                        break
 
         syslog.syslog("Step2 new "+str(_n)+", double "+str(_d))
         print(("Step2 new "+str(_n)+", double "+str(_d)))

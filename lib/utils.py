@@ -122,19 +122,9 @@ class Utils:
                 url = url.replace('257', '500')
                 try:
                     file = io.StringIO(urllib.request.urlopen(url, timeout=200).read())
-                except urllib.error.HTTPError as err:
+                except:
                     print("Cannot open image url")
                     continue
-                except urllib.error.URLError as err:
-                    print("urllib2.URLError: ")
-                    continue
-                except http.client.BadStatusLine as err:
-                    pass
-                except socket.timeout as err:
-                    print('X SOCKET TIMEOUT ' + str(err))
-                    continue
-                except ssl.SSLError as err:
-                    print('SSLError: ' + str(err))
 
                 img = Image.open(file)
                 new_dir = img_dir + "/"
@@ -142,15 +132,12 @@ class Utils:
                     os.makedirs(new_dir)
                 new_file = new_dir+str(item['articul'])+".jpg"
                 if os.path.isfile(new_file) is not True:
-                    print(("Image saved url: "+url))
+                    #print(("Image saved url: "+url))
                     img.save(new_file)
                     Utils.img_new = Utils.img_new + 1
                 else:
-                    print(("Image allready exists: "+new_file))
+                    #print(("Image allready exists: "+new_file))
                     Utils.img_double = Utils.img_double + 1
-
-            else:
-                print("\nNO IMAGE IN BASKET")
 
 
 
@@ -163,10 +150,8 @@ class Utils:
         brand_coll = cpool['collection_ilde_brands']
 
         for item in basket['basket']:
-            print(item)
-            print(scraped)
-            # is allready in final collection ?
-            double = collection_final.find_one({"articul": item['articul']})
+            #print(item)
+            #print(scraped)
 
             item['brand'] = item['brand'].upper()
 
@@ -177,6 +162,11 @@ class Utils:
                         'source': 'ilde',
                         'val': item['brand']
                     }).inserted_id
+            else:
+                print("BRAND DOUBLE")
+
+            # is allready in final collection ?
+            double = collection_final.find_one({"articul": item['articul']})
 
             # document into price collection
             price_doc = {
@@ -192,8 +182,9 @@ class Utils:
             match_articul = gestori.find_one({'Artic': item['articul']})
 
             if match_articul is not None:
-                print(("Match articul: ", item['articul']))
+                #print(("Match articul: ", item['articul']))
                 cod_good = match_articul['Cod_good']
+                print("GESTORI FOUND")
                 #print("Match articul: ", item['articul'], list(match_articul))
 
             if double is None:
@@ -202,7 +193,7 @@ class Utils:
                 # insert img link to document
                 if preview_img_link is not None:
                     item['image'] = preview_img_link['href']
-                print(("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n"))
+                #print(("\n\n img -> mongo document: "+str(item)+"\np_ids: "+str(basket['p_ids'])+"\n"))
 
                 # insert price
                 Utils.insertPrice(cpool, price_doc)
@@ -215,6 +206,7 @@ class Utils:
                 _id = collection_final.insert_one(item).inserted_id
                 Utils.count_new = Utils.count_new + 1
                 Utils.Log(cpool, 'ilde', 'new_articul', item['articul'])
+                print("NEW:", item)
             else:
                 # update final
                 if 'cod_good' in locals():
@@ -237,8 +229,9 @@ class Utils:
                 # insert price
                 Utils.insertPrice(cpool, price_doc)
 
-                print("Double: articul "+item['articul'])
+                #print("Double: articul "+item['articul'])
                 Utils.count_double = Utils.count_double + 1
+                print("UPDATED", item, scraped)
 
 
 
@@ -259,7 +252,7 @@ class Utils:
         if double is None:
             return collection.insert_one(price_doc).inserted_id
         else:
-            print('DOUBLE PRICE')
+            #print('DOUBLE PRICE')
             return False
 
 

@@ -114,23 +114,32 @@ class Step3:
                             crumbs.append(str(brc.string))
                     if len(crumbs) > 0:
                         scraped['Navi'] = ";".join(crumbs)
-                        print(("NAVI: "+scraped['Navi']))
+                        #print(("NAVI: "+scraped['Navi']))
 
                     # Volume
                     scraped['volume'] = None
                     volume = soup.find_all('b', text=re.compile('Объём'))
                     for vol in volume:
-                        print(("VOL"+vol.string))
+                        #print(("VOL"+vol.string))
                         scraped['vol'] = vol.string
 
                     # VIP price
                     scraped['vip_price'] = None
                     vip = soup.find_all('dd', {'class': 'b-product-price__card b-product-price__card--vip'})
                     for vi in vip:
-                        vip_price = vi.string.encode('utf-8')
-                        vip_price = vip_price.replace("руб.".encode(), "".encode())
+                        vip_price = vi.string
+                        vip_price = vip_price.replace("руб.", "")
                         vip_price = vip_price.strip()
-                        scraped['vip_price'] = str(vip_price)
+                        scraped['vip_price'] = vip_price
+
+                    # VIP price double check
+                    # b-product-price__card b-product-price__card--vip new
+                    vip = soup.find_all('dd', {'class': 'b-product-price__card b-product-price__card--vip new'})
+                    for vi in vip:
+                        vip_price = vi.string
+                        vip_price = vip_price.replace("руб.", "")
+                        vip_price = vip_price.strip()
+                        scraped['vip_price'] = vip_price
 
                     Utils.insertProductItems(_json, cpool, scraped, preview_img_link)
                     global_links.replace_one({'last': { '$exists': True }}, {'last': url})
