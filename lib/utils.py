@@ -144,6 +144,8 @@ class Utils:
     @staticmethod
     def insertProductItems(basket, cpool, scraped, preview_img_link = None):
 
+        cod_good = False
+
         """ mongodb insert """
         collection = cpool['collection_ilde']
         collection_final = cpool['collection_ilde_final']
@@ -209,22 +211,26 @@ class Utils:
                 print("NEW:", item)
             else:
                 # update final
-                if 'cod_good' in locals():
-                    collection_final.find_one_and_update({'articul': item['articul']}, 
-                    {
-                        '$set': {
-                            'brand': item['brand'],
-                            'gestori': cod_good,
-                            'listingprice': item['p_price'],
-                            'Navi': scraped['Navi'],
-                            'big_pic': scraped['big_pic'],
-                            'desc': scraped['desc'],
-                            'vol': scraped['volume'],
-                            'url': scraped['url'],
-                            'vip_price': scraped['vip_price'],
-                            'LastUpdate': Utils.getDbprefix()['daily']
-                        }
-                    })
+                #if 'cod_good' in locals():
+
+                # Update anyway
+                res = collection_final.update({'articul': item['articul']}, 
+                {
+                    '$set': {
+                        'brand': item['brand'],
+                        'gestori': cod_good,
+                        'listingprice': item['p_price'],
+                        'Navi': scraped['Navi'],
+                        'big_pic': scraped['big_pic'],
+                        'desc': scraped['desc'],
+                        'vol': scraped['volume'],
+                        'url': scraped['url'],
+                        'vip_price': scraped['vip_price'],
+                        'LastUpdate': Utils.getDbprefix()['daily']
+                    }
+                }, multi=True)
+
+                print("RES", res)
 
                 # insert price
                 Utils.insertPrice(cpool, price_doc)

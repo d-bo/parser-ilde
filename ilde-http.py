@@ -24,6 +24,14 @@ config.read(script_dir+'/config.ini')
 dbprefix = Utils.getDbprefix()
 cpool = Utils.getCollectionPool(config, dbprefix)
 
+@app.route("/")
+def index():
+    return "GA"
+
+@app.route("/v1/ping")
+def heartbeat():
+    return "PONG"
+
 @app.route("/start")
 def start():
 
@@ -52,4 +60,4 @@ def start():
     return '@app.route("/start")'
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8801, debug=True)
+    app.run(host='0.0.0.0', port=8801)

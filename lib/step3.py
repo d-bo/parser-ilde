@@ -44,13 +44,13 @@ class Step3:
             url = u['val']
 
             # Comment out to start from target url
-            """
+
             if cycflag is False:
-                if url != "http://iledebeaute.ru/shop/brands/mac/accessories/brush/fluff_213_kist_dlya_teney;4v9m/":
+                if url != "http://iledebeaute.ru/shop/accessories/hair/original_pretzel_brown_rezinka-braslet_dlya_volos;2zsu/":
                     continue
                 else:
                     cycflag = True
-            """
+
 
             syslog.syslog(url)
 
