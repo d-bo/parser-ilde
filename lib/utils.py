@@ -214,12 +214,13 @@ class Utils:
                 #if 'cod_good' in locals():
 
                 # Update anyway
-                res = collection_final.update({'articul': item['articul']}, 
+                res = collection_final.update({'articul': item['articul']},
                 {
                     '$set': {
                         'brand': item['brand'],
                         'gestori': cod_good,
                         'listingprice': item['p_price'],
+                        'p_original_price': item['p_original_price'],
                         'Navi': scraped['Navi'],
                         'big_pic': scraped['big_pic'],
                         'desc': scraped['desc'],
